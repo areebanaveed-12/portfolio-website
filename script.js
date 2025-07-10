@@ -91,7 +91,8 @@ function handleCommand(command) {
     output.innerHTML += "Opening resume...\n";
     showProcessingBox(() => {
       createPopup("Resume", `
-        <embed src='resume.pdf' type='application/pdf' style='width:100%; height:100%; border:none;' />
+       <embed src='resume.pdf' type='application/pdf' width='100%' height='100%' style='border:none; display: block; max-width: 100%; max-height: 100%; object-fit: contain;' />
+
       `, "resume.pdf");
       output.innerHTML += "Resume hacked.\n";
     });
@@ -122,8 +123,10 @@ function  showProcessingBox(callback) {
   const box = document.getElementById("processing-box");
   const text = document.getElementById("processing-text");
 
-  box.style.display = "block";
-  text.innerHTML = "";
+  requestAnimationFrame(() => {
+    box.style.display = "block";
+    text.innerHTML = "";
+ });
 
   const message = "Processing...";
   let i = 0;
