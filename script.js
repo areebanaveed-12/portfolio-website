@@ -80,7 +80,7 @@ function handleCommand(command) {
     showProcessingBox(() => {
       const aboutText = `
     Name: Areeba Naveed
-    Education: Rising sophomore at LUMS
+    Education: Rising junior at LUMS
     Interests: Aritificial Intelligence, Machine Learning, and  Web Development\n`;
 
       typeTextToOutput(aboutText);
@@ -119,41 +119,40 @@ function handleCommand(command) {
 
 
 
-function  showProcessingBox(callback) {
+function showProcessingBox(callback) {
   const box = document.getElementById("processing-box");
   const text = document.getElementById("processing-text");
 
+  // Prepare box and force reflow
+  box.style.display = "block";
+  text.innerHTML = ""; // Clear any old content
+
+  //Ensure browser renders box before typing starts
   requestAnimationFrame(() => {
-    box.style.display = "block";
-    text.innerHTML = "";
- });
+    const message = "Processing...";
+    let i = 0;
 
-  const message = "Processing...";
-  let i = 0;
+    function typeNext() {
+      if (i < message.length) {
+        text.innerHTML += message[i];
 
-  function typeNext() {
-    if (i < message.length) {
-      text.innerHTML += message[i++];
+        const sound = typingSound.cloneNode();
+        sound.play();
 
-      const sound = typingSound.cloneNode();
-      sound.play();
-
-      setTimeout(typeNext, 100);
-    } else {
-      // ✅ Let browser render "Processing..." before popup load
-      setTimeout(() => {
-        requestAnimationFrame(() => {
+        i++;
+        setTimeout(typeNext, 100);
+      } else {
+        setTimeout(() => {
           box.style.display = "none";
           if (callback) callback();
-        });
-      }, 300); // small delay
+        }, 300);
+      }
     }
-  }
 
-  //Trigger layout before starting animation
-  box.offsetHeight; // force reflow
-  typeNext();
+    typeNext(); //Start typing only after layout is rendered
+  });
 }
+
 
 
 
